@@ -22,7 +22,8 @@ namespace BarRaider.StockTicker
         {
             var kvp = new List<KeyValuePair<string, string>>();
             kvp.Add(new KeyValuePair<string, string>("symbols", stockSymbol));
-            kvp.Add(new KeyValuePair<string, string>("types", "quote,chart"));
+            kvp.Add(new KeyValuePair<string, string>("types", "quote")); // Remove chart as of now
+            //kvp.Add(new KeyValuePair<string, string>("types", "quote,chart"));
             kvp.Add(new KeyValuePair<string, string>("range", "dynamic"));
             //kvp.Add(new KeyValuePair<string, string>("chartLast", DEFAULT_CHART_POINTS.ToString()));
             HttpResponseMessage response = await StockQuery(STOCK_BATCH_CHART_QUOTE, kvp);
@@ -42,8 +43,9 @@ namespace BarRaider.StockTicker
                 var jp = obj.Properties().First();
                 StockQuote quote = jp.Value["quote"].ToObject<StockQuote>();
 
-                ChartBase[] chart;
-
+                ChartBase[] chart = null;
+                
+                /* Not used at this point
                 if (jp.Value["chart"]["range"].ToString() == CHART_DAILY)
                 {
                     chart = GetDailyChart(jp.Value["chart"]["data"]);
@@ -52,6 +54,7 @@ namespace BarRaider.StockTicker
                 {
                     chart = GetMinuteChart(jp.Value["chart"]["data"]);
                 }
+                */
                 return new SymbolData(quote.Symbol, quote, chart);
             }
             else
